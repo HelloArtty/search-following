@@ -1,13 +1,19 @@
 import { Card, CardActionArea, CardContent, Grid, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import data from './user_data_tiktok.json'; // แทนที่ด้วยชื่อไฟล์ JSON ที่มีข้อมูล
+import React, { useEffect, useState } from 'react';
 
 function App() {
-  // State สำหรับเก็บคำค้นหา
   const [searchTerm, setSearchTerm] = useState('');
+  const [following, setFollowing] = useState([]);
 
-  // ดึงข้อมูล Following List จาก JSON
-  const following = data["Profile"]["Following List"]["Following"];
+  useEffect(() => {
+    // ดึงข้อมูล JSON จาก URL
+    fetch('https://raw.githubusercontent.com/HelloArtty/search-following/main/src/user_data_tiktok.json')
+      .then((response) => response.json())
+      .then((data) => {
+        setFollowing(data["Profile"]["Following List"]["Following"]);
+      })
+      .catch((error) => console.error('Error fetching JSON:', error));
+  }, []);
 
   // กรองรายชื่อที่ตรงกับคำค้นหา
   const filteredUsers = following.filter((user) =>
